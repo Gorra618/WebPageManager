@@ -1,1 +1,22 @@
-<p>web-list works!</p>
+<table class="table table-borderless">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Page</th>
+      <th scope="col">URL</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of formData; track $index) {
+      <tr>
+        <th scope="row">{{ $index + 1 }}</th>
+        <td>{{ item.pageName }}</td>
+        <td><a [href]="item.pageLink" target="_blank" rel="noopener">Go to page</a></td>
+        <td>
+            <button (click)="delete($event, $index)" class="btn btn-danger">Delete</button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

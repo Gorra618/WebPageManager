@@ -1,1 +1,14 @@
-<p>data-form works!</p>
+<form [formGroup]="Form" (ngSubmit)="submitForm()">
+  <div class="mb-3">
+    <label for="page-name" class="form-label">Nombre</label>
+    <input id="page-name" type="text" formControlName="fPageName" class="form-control" />
+  </div>
+  <div class="mb-3">
+    <label for="page-link" class="form-label">Link</label>
+    <input id="page-link" type="url" formControlName="fPageLink" class="form-control" />
+  </div>
+  <div class="d-grid gap-2">
+      <button type="submit" class="btn btn-success">Agregar</button>
+      <button type="reset" class="btn btn-danger">Limpiar</button>
+  </div>
+</form>
