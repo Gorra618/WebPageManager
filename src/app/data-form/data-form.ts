@@ -1,37 +1,44 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { FormDataService } from '../services/form-data.service';
 import { IForm } from '../models/i-form';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-data-form',
+  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './data-form.html',
   styleUrl: './data-form.scss',
 })
 export class DataForm {
-  @Output() formSubmitted = new EventEmitter<IForm>();
-  Form: FormGroup;
+  private readonly formDataService = inject(FormDataService);
 
-  constructor(private fb: FormBuilder) {
-    this.Form = this.fb.group({
+  form: FormGroup;
+
+  constructor(private readonly fb: FormBuilder) {
+    this.form = this.fb.group({
       fPageName: ['', Validators.required],
-      fPageLink: ['', [Validators.required, Validators.pattern(/^https?:\/\//)]]
+      fPageLink: [
+        '',
+        [Validators.required, Validators.pattern(/^https?:\/\//)],
+      ],
     });
   }
 
-
   submitForm(): void {
-    if (this.Form.invalid) {
-      this.Form.markAllAsTouched();
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
-    const data: IForm = {
-      pageName: this.Form.value.fPageName.trim(),
-      pageLink: this.Form.value.fPageLink.trim()
-    };
+    const data = this.form.value as IForm;
 
-    this.formSubmitted.emit(data);
-    this.Form.reset();
+    this.formDataService.addFormData(data);
+    this.form.reset();
   }
 }

@@ -1,21 +1,26 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { FormDataService } from '../services/form-data.service';
 import { IForm } from '../models/i-form';
 
 @Component({
   selector: 'app-web-list',
-  imports: [],
+  standalone: true,
   templateUrl: './web-list.html',
   styleUrl: './web-list.scss',
 })
 export class WebList {
-  @Input() formData: IForm[] = [];
+  private readonly formDataService = inject(FormDataService);
 
-  delete(event: Event, index: number): void {
-    this.formData.splice(index, 1);
-    this.saveData();
+  formData: IForm[] = [];
+
+  constructor() {
+    this.formDataService.formData$.subscribe((data) => {
+      this.formData = data;
+    });
   }
 
-  private saveData(): void {
-    localStorage.setItem('Pages', JSON.stringify(this.formData));
+  delete(event: Event, index: number): void {
+    event.preventDefault();
+    this.formDataService.deleteFormData(index);
   }
 }
